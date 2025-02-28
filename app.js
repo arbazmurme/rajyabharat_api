@@ -32,8 +32,5 @@ app.use("/api/v2/admin", admin);
 const category = require("./routes/categoryRoute");
 app.use("/api/v2/category", category);
 
-app.use("/api", (req, res) => {
-  res.send("API working properly");
-});
 app.use(errorMiddleware);
 module.exports = app;
