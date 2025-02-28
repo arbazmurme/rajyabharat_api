@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 // Enable CORS
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://e-commerce-frontend-topaz-delta.vercel.app"],
+    origin: ["http://localhost:3000", "https://azshop.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -32,5 +32,8 @@ app.use("/api/v2/admin", admin);
 const category = require("./routes/categoryRoute");
 app.use("/api/v2/category", category);
 
+app.use("/api", (req, res) => {
+  res.send("API working properly");
+});
 app.use(errorMiddleware);
 module.exports = app;
