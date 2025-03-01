@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const CategorySchema = new mongoose.Schema(
-  {    
+  {
     nameInTelugu: {
       type: String,
       required: [true, "Please enter category name in Telugu"],
@@ -36,8 +36,5 @@ const CategorySchema = new mongoose.Schema(
     timestamps: true, // Adds createdAt & updatedAt automatically
   }
 );
-
-// Create Index for better query performance
-CategorySchema.index({ nameInEnglish: 1, nameInTelugu: 1, slugUrl: 1 });
 
 module.exports = mongoose.model("Category", CategorySchema);

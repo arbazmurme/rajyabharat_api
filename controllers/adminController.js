@@ -5,22 +5,31 @@ exports.createAdmin = async (req, res) => {
   try {
     const { adminName, email, password, mobile } = req.body;
 
-    // Check if the admin already exists
-    const userExists = await Admin.findOne({ email });
-    if (userExists) {
+    if (!adminName || !email || !password || !mobile) {
       return res.status(400).json({
         success: false,
-        message: "Admin already exists",
+        message: "Please enter all required fields",
+      });
+    }
+
+    // Check if the admin already exists
+    const emailExists = await Admin.findOne({ email });
+    if (emailExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Email ID already exists",
+      });
+    }
+    const mobileExists = await Admin.findOne({ mobile });
+    if (mobileExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Mobile number already exists",
       });
     }
 
     // Create new admin
-    const admin = await Admin.create({
-      adminName,
-      email,
-      password,
-      mobile,
-    });
+    const admin = await Admin.create(req.body);
 
     return res.status(201).json({
       success: true,
