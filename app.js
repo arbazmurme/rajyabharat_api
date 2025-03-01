@@ -32,5 +32,8 @@ app.use("/api/v2/admin", admin);
 const category = require("./routes/categoryRoute");
 app.use("/api/v2/category", category);
 
+const news = require("./routes/newsRoute");
+app.use("/api/v2/news", news);
+
 app.use(errorMiddleware);
 module.exports = app;

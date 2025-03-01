@@ -1,99 +1,74 @@
 const News = require("../models/newsModel");
 
-// Create News
-exports.createNews = async (req, res) => {
+exports.newsCreate = async (req, res) => {
     try {
-        const { slugUrl } = req.body;
-        const newsExists = await Category.findOne({ slugUrl });
+        const { newsTitleInTelugu, newsTitleInEnglish, slugUrl } = req.body;
 
-        if (newsExists) {
-            return res.status(400).json({ success: false, message: "news already exists" });
+        // Validate required fields
+        if (!newsTitleInTelugu || !newsTitleInEnglish || !slugUrl) {
+            return res.status(400).json({ success: false, message: "Please enter all required fields" });
         }
 
+        // Check if news already exists
+        const newsExists = await News.findOne({ slugUrl });
+        if (newsExists) {
+            return res.status(400).json({ success: false, message: "News with this slug already exists" });
+        }
+
+        // Create news entry
         const news = await News.create(req.body);
-        res.status(201).json({ success: true, message: "News created successfully", news });
-    }
-    catch (error) {
-        res.status(400).json({ success: false, message: error.message });
+
+        res.status(201).json({
+            success: true,
+            message: "News created successfully",
+            news,
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message || "Internal Server Error" });
     }
 };
 
-// Update News
-exports.updateNews = async (req, res) => {
+exports.newsUpdate = async (req, res) => {
     try {
-        const news = await News.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!news) return res.status(404).json({ success: false, message: "News not found" });
+        const slug = req.params.slug;
 
-        res.status(200).json({ success: true, message: "News updated successfully", news });
+        // Check if the news exists
+        let news = await News.findOne({ slugUrl :slug })
+        if (!news) {
+            return res.status(404).json({ success: false, message: "News not found" });
+        }   
+
+        // Update the news entry
+        news = await News.findOneAndUpdate({ slugUrl :slug }, req.body, { new: true });
+
+        res.status(200).json({
+            success: true,
+            message: "News updated successfully",
+            news,
+        });
+
     } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message || "Internal Server Error" });
     }
 };
 
-// Delete News
-exports.deleteNews = async (req, res) => {
+exports.newsDelete = async (req, res) => {
     try {
-        const news = await News.findByIdAndDelete(req.params.id);
-        if (!news) return res.status(404).json({ success: false, message: "News not found" });
+        // Check if the news exists
+        const news = await News.findOne({ slugUrl: req.params.slug });
+        if (!news) {
+            return res.status(404).json({ success: false, message: "News not found" });
+        }
 
-        res.status(200).json({ success: true, message: "News deleted successfully" });
+        // Delete the news entry
+        await News.deleteOne({ slugUrl: req.params.slug });
+        res.status(200).json({
+            success: true,
+            message: "News deleted successfully",
+        });
+
     } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
-    }
-};
-
-// Get Single News by ID
-exports.getNewsById = async (req, res) => {
-    try {
-        const news = await News.findById(req.params.id);
-        if (!news) return res.status(404).json({ success: false, message: "News not found" });
-
-        res.status(200).json({ success: true, news });
-    } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
-    }
-};
-
-// Update News Status (Approve, Reject, Pending)
-exports.updateNewsStatus = async (req, res) => {
-    try {
-        const { newsStatus } = req.body;
-        const news = await News.findByIdAndUpdate(req.params.id, { newsStatus }, { new: true });
-
-        if (!news) return res.status(404).json({ success: false, message: "News not found" });
-
-        res.status(200).json({ success: true, message: `News status updated to ${newsStatus}`, news });
-    } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
-    }
-};
-
-// Toggle sliderShow
-exports.toggleSliderShow = async (req, res) => {
-    try {
-        const news = await News.findById(req.params.id);
-        if (!news) return res.status(404).json({ success: false, message: "News not found" });
-
-        news.sliderShow = !news.sliderShow;
-        await news.save();
-
-        res.status(200).json({ success: true, message: `sliderShow set to ${news.sliderShow}`, news });
-    } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
-    }
-};
-
-// Toggle breakingNews
-exports.toggleBreakingNews = async (req, res) => {
-    try {
-        const news = await News.findById(req.params.id);
-        if (!news) return res.status(404).json({ success: false, message: "News not found" });
-
-        news.breakingNews = !news.breakingNews;
-        await news.save();
-
-        res.status(200).json({ success: true, message: `breakingNews set to ${news.breakingNews}`, news });
-    } catch (error) {
-        res.status(400).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message || "Internal Server Error" });
     }
 };
