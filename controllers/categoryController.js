@@ -51,6 +51,11 @@ exports.updateCategory = catchAsyncErrors(async (req, res, next) => {
       return res.status(404).json({ success: false, message: "Category not found" });
     }
 
+    // Check if slugUrl already exists
+    if (await Category.findOne({ slugUrl: req.body.slugUrl })) {
+      return res.status(400).json({ success: false, message: "Slug URL already exists" });
+    }
+
     // Update category using slugUrl
     category = await Category.findOneAndUpdate(
       { slugUrl: slug },
