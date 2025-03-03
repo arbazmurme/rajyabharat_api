@@ -38,25 +38,17 @@ exports.allCategories = catchAsyncErrors(async (req, res, next) => {
 
 exports.updateCategory = catchAsyncErrors(async (req, res, next) => {
   try {
-    const { nameInEnglish, nameInTelugu, slugUrl} = req.body;
+    const { nameInEnglish, nameInTelugu} = req.body;
     const { slug } = req.params;
 
-    if (!nameInEnglish || !nameInTelugu || !slugUrl) {
+    if (!nameInEnglish || !nameInTelugu) {
       return res.status(400).json({ success: false, message: "Please enter all required fields" });
     }
-
+    
     // Find the category using slugUrl
     let category = await Category.findOne({ slugUrl: slug });
     if (!category) {
       return res.status(404).json({ success: false, message: "Category not found" });
-    }
-
-    // Ensure new slugUrl is unique if it's being updated
-    if (slugUrl && slugUrl !== category.slugUrl) {
-      const existingCategory = await Category.findOne({ slugUrl });
-      if (existingCategory) {
-        return res.status(400).json({ success: false, message: "Slug URL already exists" });
-      }
     }
 
     // Update category using slugUrl
@@ -65,8 +57,8 @@ exports.updateCategory = catchAsyncErrors(async (req, res, next) => {
       req.body,
       { new: true, runValidators: true }
     );
-    res.status(200).json({ success: true, message: "Category updated successfully", category });
 
+    res.status(200).json({ success: true, message: "Category updated successfully", category });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -89,12 +81,41 @@ exports.deleteCategory = catchAsyncErrors(async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Category deleted successfully",
+      id: category._id,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: error.message || "Internal Server Error",
       error: error,
+    });
+  }
+});
+
+exports.setStatus = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { status } = req.body;  
+    const { slug } = req.params;
+
+    // Find the category using slugUrl
+    let category = await Category.findOne({ slugUrl: slug });
+    if (!category) {
+      return res.status(404).json({ success: false, message: "Category not found in database" });
+    }
+
+    // Update category using slugUrl
+    category = await Category.findOneAndUpdate(
+      { slugUrl: slug },
+      { status: status },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({ success: true, message: "Category updated successfully", category });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
     });
   }
 });

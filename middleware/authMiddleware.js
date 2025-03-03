@@ -3,7 +3,7 @@ const Admin = require("../models/adminModel");
 
 exports.protectAdmin = async (req, res, next) => {
   try {
-    let token = req.cookies.token && req.header("Authorization")
+    let token = req.cookies.token || req.header("Authorization")
 
     // Check if token exists
     if (!token) {
