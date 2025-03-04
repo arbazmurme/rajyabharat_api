@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const newsSchema = mongoose.Schema({
-  newsTitleInEnglish: {
+  newsTitleInTelugu: {
     type: String,
     required: [true, "Please enter newsTitle name"],
     unique: [true, "slugUrl already exist"],
     trim: true,
   },
-  newsTitleInTelugu: {
+  newsTitleInEnglish: {
     type: String,
     required: [true, "Please enter newsTitle name"],
     unique: [true, "slugUrl already exist"],
@@ -27,7 +27,6 @@ const newsSchema = mongoose.Schema({
     type: String,
     required: [true, "Please enter  newsContent"],
   },
-
   category: {
     type: String,
     required: [true, "Please enter Category Name name"],
@@ -38,25 +37,69 @@ const newsSchema = mongoose.Schema({
     ref: "Category",
   },
 
+  metaKeywords: {
+    type: [String],
+  },
+
+  slider: {
+    type: [String],
+  },
+
+  thumbnail: {
+    type: String,
+  },
+
+  icon: {
+    type: String,
+  },
+
+  reporterId: {
+    type: mongoose.Schema.ObjectId,
+    required: [true, "reporterId Require"],
+    ref: "Reporter",
+  },
+
+  reporterName: {
+    type: String,
+    required: [true, "Please enter  name"],
+    trim: true,
+  },
+
+  email: {
+    type: String,
+    required: [true, "Please provide mobile"],
+    trim: true,
+  },
+
+  mobile: {
+    type: String,
+    trim: true,
+  },
+
   sliderShow: {
     type: Boolean,
     default: false,
   },
-  breakingNews: {
+
+  breakingNewsShow: {
     type: Boolean,
     default: false,
   },
 
-  newsStatus: {
+  newsAprovelText: {
     type: String,
-    enum: ['Aprove', "Pending", "Reject"],
+    enum: ["Pending", "Approved", "Rejected"],
     default: "Pending",
   },
+  
   numberofViews: {
     type: Number,
     default: 0,
   },
-
+  reporterImage: {
+    type: String,
+  },
+  
   review: [
     {
       userName: {
@@ -68,21 +111,14 @@ const newsSchema = mongoose.Schema({
       newsComment: {
         type: String,
       },
-      newsLike: {
-        type: Number,
-        default: 0,
-      },
-      newsDislike: {
-        type: Number,
-        default: 0,
-      },
       avatar: {
         type: String,
         default:
-          "https://res.cloudinary.com/dxkufsejm/image/upload/v1626826824/avater/avater",
+          "https://res.cloudinary.com/dh1fsseho/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1669977353/Avatar/avatar2_z6yynb.jpg",
       },
     },
   ],
+
   createdAt: {
     type: Date,
     default: Date.now,
