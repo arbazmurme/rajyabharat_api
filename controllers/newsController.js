@@ -1,3 +1,4 @@
+const { response } = require("../app");
 const News = require("../models/newsModel");
 const cloudinary = require("cloudinary");
 
@@ -125,6 +126,7 @@ exports.newsUpdate = async (req, res) => {
         if (!news) {
             return res.status(404).json({ success: false, message: "News not found" });
         }
+        console.log(req.body);
 
         // Update the news entry
         news = await News.findOneAndUpdate({ slugUrl: slug }, req.body, { new: true });
@@ -157,5 +159,25 @@ exports.newsDelete = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ success: false, message: error.message || "Internal Server Error" });
+    }
+};
+
+exports.updateNewsApproval = async (req, res) => {
+    try {
+        const { slugUrl, newsAprovelText } = req.body;
+        if (!slugUrl || !newsAprovelText) {
+            return res.status(400).json({ message: "slugUrl and newsAprovelText are required" });
+        }
+        const news = await News.findOneAndUpdate(
+            { slugUrl },
+            { newsAprovelText },
+            { new: true }
+        );
+        if (!news) {
+            return res.status(404).json({ message: "News not found with the provided slugUrl" });
+        }
+        res.status(200).json({ message: "News approval status updated successfully", news,  success: true });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
