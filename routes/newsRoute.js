@@ -8,6 +8,7 @@ const {
   SlugUrlExist,
   getAllNews,
   updateNewsApproval,
+  getNewsByCategory,
 } = require("../controllers/newsController");
 const { protectAdmin } = require("../middleware/authMiddleware");
 const router = express.Router();
@@ -20,5 +21,6 @@ router.route("/newsslugurl/:slugurl").get(SlugUrlExist);
 router.route("/newsimage").post(UploadImage);
 router.route("/findbyurl/:url").get(getFindByNewsurl);
 router.route("/all").get(getAllNews);
+router.route("/byCategory").post(getNewsByCategory);
 
 module.exports = router;

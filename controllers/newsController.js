@@ -96,10 +96,28 @@ exports.getAllNews = async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message || "Internal Server Error" });
     }
+}; // this makes the app slow
+
+exports.getNewsByCategory = async (req, res) => {
+    try {
+        const { categoryId } = req.body;
+        if (!categoryId) {
+            return res.status(400).json({ success: false, message: "categoryId is required" });
+        }
+        const news = await News.find({ categoryId: req.body.categoryId }).sort({ createdAt: -1 }).limit(6);
+        
+        res.status(200).json({
+            success: true,
+            news: news,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message || "Internal Server Error" });
+    }
 };
 
 exports.getFindByNewsurl = async (req, res, next) => {
     try {
+        console.log(req.params.url);
         let news = await News.find({ slugUrl: req.params.url });
 
         if (!news) {

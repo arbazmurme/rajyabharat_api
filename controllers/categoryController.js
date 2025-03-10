@@ -10,7 +10,7 @@ exports.createCategory = catchAsyncErrors(async (req, res, next) => {
     }
 
     if (await Category.findOne({ slugUrl })) {
-      return res.status(400).json({ success: false, message: "Slug URL already exists" });
+      return res.status(400).json({ success: false, message: "Name in English already exists" });
     }
     
     const category = await Category.create(req.body);
