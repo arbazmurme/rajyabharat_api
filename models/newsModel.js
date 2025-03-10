@@ -36,7 +36,7 @@ const newsSchema = mongoose.Schema({
     required: [true, "Category Id Require"],
     ref: "Category",
   },
-
+  district: { type: String },
   metaKeywords: {
     type: [String],
   },
@@ -91,7 +91,7 @@ const newsSchema = mongoose.Schema({
     enum: ["Pending", "Approved", "Rejected"],
     default: "Pending",
   },
-  
+
   numberofViews: {
     type: Number,
     default: 0,
@@ -99,7 +99,7 @@ const newsSchema = mongoose.Schema({
   reporterImage: {
     type: String,
   },
-  
+
   review: [
     {
       userName: {

@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 // Enable CORS
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://azshop.vercel.app"],
+    origin: ["http://localhost:3000", "https://rajyabharat-webside.vercel.app/", "https://rajyabharat.vercel.app/", "https://www.rajyabharat.com/", "https://rajyabharat.com/"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
