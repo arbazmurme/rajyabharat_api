@@ -10,22 +10,22 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({ path: "config/config.env" });
 }
 
-// Enable CORS
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://rajyabharat-webside.vercel.app/", "https://rajyabharat.vercel.app/", "https://www.rajyabharat.com/", "https://rajyabharat.com/"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// CORS Configuration
+const corsOptions = {
+  origin: "*",
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
+
+// Middleware
 app.use(express.json({ limit: "50mb" }));
 app.use(
   express.urlencoded({ extended: true, parameterLimit: 500000, limit: "50mb" })
 );
 app.use(cookieParser());
 
-//Rotes Imports
+// Route Imports
 const admin = require("./routes/adminRoutes");
 app.use("/api/v1/admin", admin);
 
@@ -35,5 +35,7 @@ app.use("/api/v1/category", category);
 const news = require("./routes/newsRoute");
 app.use("/api/v1/news", news);
 
+// Error Handling Middleware
 app.use(errorMiddleware);
+
 module.exports = app;
