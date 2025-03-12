@@ -264,14 +264,14 @@ exports.updateNewsApproval = async (req, res) => {
 exports.updateNewsWithDistricts = async () => {
   try {
     const newsData = await News.find();
-    const districts = ["Telangana", "Andhrapradesh"];
+    const districts = ["Amirpath", "Bagampeth", "S R Nagar", "Siddipet"];
     for (let news of newsData) {
       const assignedDistrict =
         districts[Math.floor(Math.random() * districts.length)];
 
       await News.updateOne(
         { _id: news._id },
-        { $set: { district: assignedDistrict } }
+        { $set: { mandal: assignedDistrict } }
       );
     }
 

@@ -35,6 +35,9 @@ app.use("/api/v1/category", category);
 const news = require("./routes/newsRoute");
 app.use("/api/v1/news", news);
 
+const gitAllDistrict = require("./routes/districtsRoutes");
+app.use("/api/v1/district", gitAllDistrict);
+
 // Error Handling Middleware
 app.use(errorMiddleware);
 

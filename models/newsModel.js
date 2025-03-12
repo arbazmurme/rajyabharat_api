@@ -37,6 +37,8 @@ const newsSchema = mongoose.Schema({
     ref: "Category",
   },
   district: { type: String },
+  state: { type: String },
+  mandal: { type: String },
   metaKeywords: {
     type: [String],
   },
